@@ -8,7 +8,7 @@ from src.utils import read_json
 
 
 def parse_arguments() -> Namespace:
-    parser = ArgumentParser(description='Prepare dataset')
+    parser = ArgumentParser(description='Prepare ML dataset')
     parser.add_argument(
         '--data_path',
         type=str,

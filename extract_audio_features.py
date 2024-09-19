@@ -14,7 +14,7 @@ def parse_arguments() -> Namespace:
     parser.add_argument(
         '--data_dir',
         type=str,
-        default='nsynth-subtrain/audio'
+        default='nsynth-subtrain'
     )
     parser.add_argument(
         '--output_path',
@@ -80,7 +80,7 @@ def extract_features(audio_path):
 
 if __name__ == '__main__':
     args = parse_arguments()
-    audio_paths = glob.glob(os.path.join(args.data_dir, '*.wav'))
+    audio_paths = glob.glob(os.path.join(args.data_dir, 'audio', '*.wav'))
 
     feature_dict = {}
     for audio_path in tqdm(audio_paths):

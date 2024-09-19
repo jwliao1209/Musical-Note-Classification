@@ -2,7 +2,9 @@ import os
 
 
 RESULT_DIR = 'results'
-MEL_DIR = os.path.join(RESULT_DIR, 'mel_spectrogram')
+MEL_SPEC = "mel_spec"
+MEL_DIR = os.path.join(RESULT_DIR, MEL_SPEC)
+
 
 FFT_WINDOW_SIZE = 2048
 HOP_LENGTH = 512

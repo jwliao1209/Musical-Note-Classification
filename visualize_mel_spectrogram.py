@@ -6,7 +6,8 @@ import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.constants import MEL_DIR, FFT_WINDOW_SIZE, HOP_LENGTH
+from src.constants import MEL_DIR
+from src.extract_mel_spectrogram import mel_spectrogram_extractor
 
 
 def parse_arguments() -> Namespace:
@@ -27,17 +28,7 @@ if __name__ == '__main__':
     instrument, pitch = filename.split('_')[:2]
 
     # Load the audio file and compute the Mel-Spectrogram
-    y, sr = librosa.load(args.audio_path)
-    S = librosa.feature.melspectrogram(
-        y=y,
-        sr=sr,
-        n_mels=128,
-        fmax=8000,
-        n_fft=FFT_WINDOW_SIZE,
-        hop_length=HOP_LENGTH
-    )
-    # Convert to decibels
-    S_dB = librosa.power_to_db(S, ref=np.max)
+    S_dB, sr = mel_spectrogram_extractor(args.audio_path)
 
     # Plot the Mel-Spectrogram
     plt.figure(figsize=(10, 6))
@@ -46,4 +37,3 @@ if __name__ == '__main__':
     plt.title(f'{instrument} - {pitch}')
     plt.tight_layout()
     plt.savefig(os.path.join(MEL_DIR, filename.replace('.wav', '.png')))
-
