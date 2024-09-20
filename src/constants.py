@@ -1,9 +1,13 @@
 import os
 
 
+PROJECT_NAME = "DeepMIR_HW0"
 RESULT_DIR = 'results'
+CHECKPOINT_DIR = 'checkpoints'
 MEL_SPEC = "mel_spec"
 MEL_DIR = os.path.join(RESULT_DIR, MEL_SPEC)
+CONFIG_FILE = "config.json"
+CKPT_FILE = "checkpoint.pth"
 
 
 FFT_WINDOW_SIZE = 2048

@@ -4,7 +4,6 @@ from argparse import ArgumentParser, Namespace
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-import numpy as np
 
 from src.constants import MEL_DIR
 from src.audio_extractor import mel_spec_extractor

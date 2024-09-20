@@ -6,6 +6,7 @@ from torch import nn
 from torch.cuda.amp.grad_scaler import GradScaler
 from tqdm import tqdm
 
+from src.constants import CKPT_FILE
 from src.metric import cal_top1_acc, cal_top3_acc
 from src.utils import dict_to_device
 
@@ -25,6 +26,7 @@ class Trainer:
         clip_grad_norm: Optional[float] = 1.0,
         fp32: bool = False,
         disable_valid_on_start: bool = False,
+        checkpoint_dir: str = None,
     ) -> None:
 
         self.model = model
@@ -41,6 +43,7 @@ class Trainer:
         self.logger = logger
         self.disable_valid_on_start = disable_valid_on_start
         self.cur_ep = 0
+        self.checkpoint_dir = checkpoint_dir
         print(self)
 
     def __repr__(self) -> str:
@@ -123,6 +126,7 @@ class Trainer:
         record = {f"valid_{k}": round(v, 4) for k, v in result.items()}
         self.log({'epoch': self.cur_ep} | record)
         print(record)
+        self.save_checkpoint()
 
     @staticmethod
     def evaluate(
@@ -150,3 +154,19 @@ class Trainer:
         for self.cur_ep in range(1, epochs + 1):
             self.train_one_epoch()
             self.valid_one_epoch()
+    
+    def save_checkpoint(self) -> None:
+        checkpoint = {
+            'epoch': self.cur_ep,
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'scheduler_state_dict': self.lr_scheduler.state_dict(),
+        }
+        save_path = os.path.join(self.checkpoint_dir, CKPT_FILE)
+        torch.save(checkpoint, save_path)
+
+    def load_checkpoint(self, path):
+        checkpoint = torch.load(os.path.join(path, CKPT_FILE))
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.lr_scheduler.load_state_dict(checkpoint['scheduler_state_dict'])

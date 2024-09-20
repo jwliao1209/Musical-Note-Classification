@@ -1,15 +1,16 @@
+import os
 from argparse import ArgumentParser, Namespace
 
 import torch
 import wandb
 from torch import nn
-from torch.utils.data import DataLoader
 
+from src.constants import PROJECT_NAME, CHECKPOINT_DIR, CONFIG_FILE
 from src.dataset import AudiosDataset
 from src.model import ShortChunkCNN
 from src.trainer import Trainer
 from src.transform import get_transforms
-from src.utils import read_json
+from src.utils import set_random_seeds, get_time, read_json, save_json
 
 
 def parse_arguments() -> Namespace:
@@ -53,7 +54,12 @@ def parse_arguments() -> Namespace:
 
 
 if __name__ == "__main__":
+    set_random_seeds()
     args = parse_arguments()
+    checkpoint_dir = os.path.join(CHECKPOINT_DIR, get_time())
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    save_json(vars(args), os.path.join(checkpoint_dir, CONFIG_FILE))
+
     train_data = read_json(args.train_data_path)
     valid_data = read_json(args.valid_data_path)
     test_data = read_json(args.test_data_path)
@@ -94,12 +100,11 @@ if __name__ == "__main__":
 
     # Prepare logger
     wandb.init(
-        project="DeepMIR_HW0",
-        # group=config.name,
-        # name=,
-        # config=flatten_dict(config),
+        project=PROJECT_NAME,
+        name=os.path.basename(checkpoint_dir),
+        config=vars(args),
     )
-    wandb.watch(model, log="all")
+    wandb.watch(model, log='all')
 
     # Start training
     trainer = Trainer(
@@ -113,5 +118,6 @@ if __name__ == "__main__":
         accum_grad_step=1,
         clip_grad_norm=1.0,
         logger=wandb,
+        checkpoint_dir=checkpoint_dir,
     )
     trainer.fit(epochs=args.epochs)
