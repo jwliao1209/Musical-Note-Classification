@@ -1,23 +1,20 @@
+import glob
 import os
 from argparse import ArgumentParser, Namespace
 
 import pandas as pd
 from tqdm import tqdm
 
-from src.utils import read_json
+from src.audio_extractor import audio_features_extractor
+from src.utils import read_json, flatten_features
 
 
 def parse_arguments() -> Namespace:
     parser = ArgumentParser(description='Prepare ML dataset')
     parser.add_argument(
-        '--data_path',
+        '--data_dir',
         type=str,
-        default='nsynth-subtrain/examples.json'
-    )
-    parser.add_argument(
-        '--feature_path',
-        type=str,
-        default='nsynth-subtrain/features.json'
+        default='nsynth-subtrain'
     )
     parser.add_argument(
         '--save_path',
@@ -27,22 +24,16 @@ def parse_arguments() -> Namespace:
     return parser.parse_args()
 
 
-def flatten_features(feature_dict):
-    flatten_feature_dict = {}
-    for feature_name, values in feature_dict.items():
-        if isinstance(values, list):
-            for i in range(len(values)):
-                flatten_feature_dict[f'{feature_name}_{i}'] = values[i]
-        else:
-            flatten_feature_dict[feature_name] = values
-    return flatten_feature_dict
-
-
 if __name__ == '__main__':
     args = parse_arguments()
     os.makedirs(os.path.dirname(args.save_path), exist_ok=True)
-    data_dict = read_json(args.data_path)
-    feature_dict = read_json(args.feature_path)
+    data_dict = read_json(os.path.join(args.data_dir, 'examples.json'))
+    audio_paths = glob.glob(os.path.join(args.data_dir, 'audio', '*.wav'))
+
+    feature_dict = {}
+    for audio_path in tqdm(audio_paths):
+        filename = os.path.splitext(os.path.basename(audio_path))[0]
+        feature_dict[filename] = audio_features_extractor(audio_path)
 
     data_list = []
     for filename, info in tqdm(data_dict.items()):

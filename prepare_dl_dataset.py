@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 
 from src.constants import MEL_SPEC
-from src.extract_mel_spectrogram import mel_spectrogram_extractor
+from src.audio_extractor import mel_spec_extractor
 from src.utils import read_json, save_json
 
 
@@ -16,11 +16,6 @@ def parse_arguments() -> Namespace:
         '--data_dir',
         type=str,
         default='nsynth-subtrain'
-    )
-    parser.add_argument(
-        '--data_path',
-        type=str,
-        default='nsynth-subtrain/examples.json'
     )
     parser.add_argument(
         "--not_log_scale",
@@ -38,12 +33,12 @@ if __name__ == '__main__':
     MEL_SPEC = f"{MEL_SPEC}_not_log" if args.not_log_scale else MEL_SPEC
     os.makedirs(os.path.join(args.data_dir, MEL_SPEC), exist_ok=True)
     audio_paths = glob.glob(os.path.join(args.data_dir, 'audio', '*.wav'))
-    data_dict = read_json(args.data_path)
+    data_dict = read_json(os.path.join(args.data_dir, 'examples.json'))
 
     data_list = []
     for audio_path in tqdm(audio_paths):
         filename = os.path.splitext(os.path.basename(audio_path))[0]
-        S, _ = mel_spectrogram_extractor(audio_path, log_scale=not args.not_log_scale)
+        S, _ = mel_spec_extractor(audio_path, log_scale=not args.not_log_scale)
 
         save_path = os.path.join(args.data_dir, MEL_SPEC, f"{filename}.npy")
         np.save(save_path, S)

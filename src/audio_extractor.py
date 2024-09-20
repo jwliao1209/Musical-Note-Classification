@@ -1,30 +1,25 @@
-import glob
-import os
-from argparse import ArgumentParser, Namespace
-
 import librosa
 import numpy as np
-from tqdm import tqdm
 
-from src.utils import save_json
+from src.constants import FFT_WINDOW_SIZE, HOP_LENGTH
 
 
-def parse_arguments() -> Namespace:
-    parser = ArgumentParser(description='Extract audio features')
-    parser.add_argument(
-        '--data_dir',
-        type=str,
-        default='nsynth-subtrain'
+def mel_spec_extractor(audio_path, log_scale=True):
+    y, sr = librosa.load(audio_path)
+    S = librosa.feature.melspectrogram(
+        y=y,
+        sr=sr,
+        n_mels=128,
+        fmax=8000,
+        n_fft=FFT_WINDOW_SIZE,
+        hop_length=HOP_LENGTH
     )
-    parser.add_argument(
-        '--output_path',
-        type=str,
-        default='nsynth-subtrain/features.json'
-    )
-    return parser.parse_args()
+    if log_scale:
+        S = librosa.power_to_db(S, ref=np.max)
+    return S, sr 
 
 
-def extract_features(audio_path):
+def audio_features_extractor(audio_path):
     y, sr = librosa.load(audio_path)
 
     # MFCC
@@ -76,14 +71,3 @@ def extract_features(audio_path):
         'rms_std': float(rms_std),
         'tempo': tempo
     }
-
-
-if __name__ == '__main__':
-    args = parse_arguments()
-    audio_paths = glob.glob(os.path.join(args.data_dir, 'audio', '*.wav'))
-
-    feature_dict = {}
-    for audio_path in tqdm(audio_paths):
-        filename = os.path.splitext(os.path.basename(audio_path))[0]
-        feature_dict[filename] = extract_features(audio_path)
-    save_json(feature_dict, args.output_path)

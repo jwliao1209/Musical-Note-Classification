@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from src.constants import MEL_DIR
-from src.extract_mel_spectrogram import mel_spectrogram_extractor
+from src.audio_extractor import mel_spec_extractor
 
 
 def parse_arguments() -> Namespace:
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     instrument, pitch = filename.split('_')[:2]
 
     # Load the audio file and compute the Mel-Spectrogram
-    S_dB, sr = mel_spectrogram_extractor(args.audio_path)
+    S_dB, sr = mel_spec_extractor(args.audio_path)
 
     # Plot the Mel-Spectrogram
     plt.figure(figsize=(10, 6))

@@ -8,6 +8,11 @@ source deepmir_hw0/bin/activate
 pip install -r requirements.txt
 ```
 
+## Download Dataset
+```
+bash scripts/download.sh
+```
+
 ## Task 1: Visualize a Mel-Spectrogram
 ```
 bash scripts/run_task1.sh
