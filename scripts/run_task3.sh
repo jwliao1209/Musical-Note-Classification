@@ -29,7 +29,9 @@ fi
 # Step 2: Train DL model
 
 # w/o log-scale
-python train_dl.py --train_data_path dataset/train_not_log_scale.json --valid_data_path dataset/valid_not_log_scale.json --test_data_path dataset/test_not_log_scale.json
+# python train_dl.py --train_data_path dataset/train_not_log_scale.json --valid_data_path dataset/valid_not_log_scale.json --test_data_path dataset/test_not_log_scale.json
 
 # w/ log-scale
-python train_dl.py --train_data_path dataset/train.json --valid_data_path dataset/valid.json --test_data_path dataset/test.json
+# python train_dl.py --train_data_path dataset/train.json --valid_data_path dataset/valid.json --test_data_path dataset/test.json
+
+python inference.py

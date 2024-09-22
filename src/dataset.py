@@ -15,7 +15,7 @@ class AudiosDataset(Dataset):
         data = copy.deepcopy(self.data_list[i])
         return self.transform(data) if self.transform is not None else data
 
-    def get_loader(self, batch_size, shuffle=True, num_workers=1):
+    def get_loader(self, batch_size=1, shuffle=False, num_workers=0):
         return DataLoader(
             self,
             batch_size=batch_size,

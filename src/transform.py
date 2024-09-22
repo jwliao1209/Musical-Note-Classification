@@ -14,7 +14,6 @@ class BaseTransform(object):
                 data[key] = self._process(data[key], **kwargs)
             else:
                 raise KeyError(f"{key} is not a key in data.")
-
         return data
 
     def _parse_var(self, **kwargs):
@@ -22,9 +21,6 @@ class BaseTransform(object):
 
     def _process(self, single_data, **kwargs):
         NotImplementedError
-
-    def _update_prob(self, cur_ep, total_ep):
-        pass
 
 
 class LoadMelSpec(BaseTransform):

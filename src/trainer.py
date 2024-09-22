@@ -7,7 +7,7 @@ from torch.cuda.amp.grad_scaler import GradScaler
 from tqdm import tqdm
 
 from src.constants import CKPT_FILE
-from src.metric import cal_top1_acc, cal_top3_acc
+from src.evaluate import evaluator
 from src.utils import dict_to_device
 
 
@@ -44,6 +44,7 @@ class Trainer:
         self.disable_valid_on_start = disable_valid_on_start
         self.cur_ep = 0
         self.checkpoint_dir = checkpoint_dir
+        self.best_score = 0.0
         print(self)
 
     def __repr__(self) -> str:
@@ -97,8 +98,11 @@ class Trainer:
                 self.grad_scaler.update()
                 self.optimizer.zero_grad()
                 self.lr_scheduler.step()
-            
-            record = {k: v.item() if isinstance(v, torch.Tensor) else v for k, v in output.items() }
+
+            record = {
+                f"train_{k}": v.item() if isinstance(v, torch.Tensor) else v
+                for k, v in output.items()
+            }
             progress_bar.set_postfix(record)
             self.log(record)
         progress_bar.close()
@@ -122,26 +126,15 @@ class Trainer:
 
         preds = torch.cat([o['pred'] for o in outputs])
         labels = torch.cat([o['label'] for o in outputs])
-        result = self.evaluate(preds, labels)
+        result = evaluator(preds, labels)
         record = {f"valid_{k}": round(v, 4) for k, v in result.items()}
         self.log({'epoch': self.cur_ep} | record)
         print(record)
-        self.save_checkpoint()
 
-    @staticmethod
-    def evaluate(
-        preds: torch.Tensor,
-        labels: torch.Tensor,
-    ) -> Dict[str, float]:
-
-        eval_func = {
-            "top1_acc": cal_top1_acc,
-            "top3_acc": cal_top3_acc,
-        }
-        results = {}
-        for metric, func in eval_func.items():
-            results[metric] = func(preds, labels)
-        return results
+        if record['valid_top1_acc'] > self.best_score:
+            self.best_score = record['valid_top1_acc']
+            self.save()
+            print("Save best model: epoch={self.cur_ep}, score={self.best_score}")
 
     def log(self, record: Dict[str, float]) -> None:
         if self.logger is not None:
@@ -155,18 +148,18 @@ class Trainer:
             self.train_one_epoch()
             self.valid_one_epoch()
     
-    def save_checkpoint(self) -> None:
+    def save(self) -> None:
         checkpoint = {
             'epoch': self.cur_ep,
-            'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'scheduler_state_dict': self.lr_scheduler.state_dict(),
+            'model': self.model.state_dict(),
+            'optimizer': self.optimizer.state_dict(),
+            'lr_scheduler': self.lr_scheduler.state_dict(),
         }
         save_path = os.path.join(self.checkpoint_dir, CKPT_FILE)
         torch.save(checkpoint, save_path)
 
-    def load_checkpoint(self, path):
+    def load(self, path):
         checkpoint = torch.load(os.path.join(path, CKPT_FILE))
-        self.model.load_state_dict(checkpoint['model_state_dict'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        self.lr_scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+        self.model.load_state_dict(checkpoint['model'], weights_only=True)
+        self.optimizer.load_state_dict(checkpoint['optimizer'])
+        self.lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])

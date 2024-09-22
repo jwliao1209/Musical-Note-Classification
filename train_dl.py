@@ -7,7 +7,7 @@ from torch import nn
 
 from src.constants import PROJECT_NAME, CHECKPOINT_DIR, CONFIG_FILE
 from src.dataset import AudiosDataset
-from src.model import ShortChunkCNN
+from src.models import ShortChunkCNN, ShortChunkResCNN
 from src.trainer import Trainer
 from src.transform import get_transforms
 from src.utils import set_random_seeds, get_time, read_json, save_json
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     # Prepare training
     device = torch.device(f'cuda:0'if torch.cuda.is_available() else 'cpu')
-    model = ShortChunkCNN()
+    model = ShortChunkResCNN()
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.AdamW(
         model.parameters(),
