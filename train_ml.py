@@ -26,7 +26,7 @@ if __name__ == '__main__':
     y_test = test_df[LABEL].to_numpy()
 
     # Train a Random Forest model
-    model = LGBMClassifier(n_estimators=100, random_state=42)
+    model = LGBMClassifier(n_estimators=400, random_state=42)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
@@ -43,4 +43,4 @@ if __name__ == '__main__':
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.title('Confusion Matrix')
-    plt.savefig(os.path.join(RESULT_DIR, 'confusion_matrix_plot.png'))
+    # plt.savefig(os.path.join(RESULT_DIR, 'confusion_matrix_.png'))
