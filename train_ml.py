@@ -4,10 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from lightgbm import LGBMClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, top_k_accuracy_score
 
-from src.constants import FEATURE_COLUMNS, LABEL, KNOWN_CLASSES, KNOWN_LABELS, RESULT_DIR
+from src.constants import FEATURE_COLUMNS, LABEL, KNOWN_CLASSES, KNOWN_LABELS
 
 
 if __name__ == '__main__':
