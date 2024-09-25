@@ -39,3 +39,17 @@ bash scripts/run_task3_train.sh
 ```
 bash scripts/run_task3_infer.sh
 ```
+
+## Operating System and Device
+We implemented the code on an environment running Ubuntu 22.04.1, utilizing a 12th Generation Intel(R) Core(TM) i7-12700 CPU, along with a single NVIDIA GeForce RTX 4090 GPU equipped with 24 GB of dedicated memory.
+
+
+## Citation
+```bibtex
+@misc{
+    title  = {Music Note Classification},
+    author = {Jia-Wei Liao},
+    url    = {https://github.com/jwliao1209/Musical-Note-Classification},
+    year   = {2023}
+}
+```

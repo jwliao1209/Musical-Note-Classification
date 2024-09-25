@@ -94,6 +94,7 @@ if __name__ == '__main__':
         optimizer=optimizer,
         max_lr=args.lr,
         steps_for_one_epoch=len(train_loader),
+        epochs=args.epochs,
     )
 
     # Prepare logger

@@ -8,6 +8,7 @@ def get_lr_scheduler(
     optimizer: Optimizer,
     max_lr: float,
     steps_for_one_epoch: int,
+    epochs: int = 10,
     ) -> _LRScheduler:
 
     if name == "step":
@@ -32,5 +33,5 @@ def get_lr_scheduler(
     elif name == "cosine_annealing":
         return torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer=optimizer,
-            T_max=args.epochs * steps_for_one_epoch,
+            T_max=epochs * steps_for_one_epoch,
         )

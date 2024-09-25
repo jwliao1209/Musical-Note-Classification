@@ -90,11 +90,6 @@ class ShortChunkCNN(BaseModel):
     def __init__(
         self,
         n_channels=128,
-        sample_rate=16000,
-        n_fft=512,
-        f_min=0.0,
-        f_max=8000.0,
-        n_mels=128,
         n_class=11,
     ):
         super(ShortChunkCNN, self).__init__()
@@ -133,11 +128,6 @@ class ShortChunkResCNN(BaseModel):
     def __init__(
         self,
         n_channels=128,
-        sample_rate=16000,
-        n_fft=512,
-        f_min=0.0,
-        f_max=8000.0,
-        n_mels=128,
         n_class=11,
     ):
         super(ShortChunkResCNN, self).__init__()
