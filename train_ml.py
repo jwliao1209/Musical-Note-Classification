@@ -7,7 +7,7 @@ from lightgbm import LGBMClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, top_k_accuracy_score
 
-from src.constants import FEATURE_COLUMNS, LABEL, KNOWN_CLASSES, RESULT_DIR
+from src.constants import FEATURE_COLUMNS, LABEL, KNOWN_CLASSES, KNOWN_LABELS, RESULT_DIR
 
 
 if __name__ == '__main__':
@@ -39,8 +39,9 @@ if __name__ == '__main__':
     # Plot the confusion matrix
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(10, 7))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=KNOWN_CLASSES, yticklabels=KNOWN_CLASSES)
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=KNOWN_LABELS, yticklabels=KNOWN_LABELS)
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
+    plt.xticks(rotation=45, ha='right')
     plt.title('Confusion Matrix')
-    # plt.savefig(os.path.join(RESULT_DIR, 'confusion_matrix_.png'))
+    plt.savefig(os.path.join(RESULT_DIR, 'lgbm_confusion_matrix.png'))

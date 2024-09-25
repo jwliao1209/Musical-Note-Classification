@@ -1,13 +1,12 @@
 #!/bin/bash
 
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/bass_acoustic_000-024-100.wav
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/bass_electronic_000-022-127.wav
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/bass_synthetic_000-024-100.wav
-
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/flute_acoustic_000-055-100.wav
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/flute_electronic_000-055-127.wav
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/flute_synthetic_001-021-025.wav
-
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/guitar_acoustic_000-021-025.wav
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/guitar_electronic_000-024-025.wav
-python visualize_mel_spectrogram.py --audio_path nsynth-subtrain/audio/guitar_synthetic_000-021-050.wav
+python visualize_mel_spec.py --audio_paths \
+        nsynth-subtrain/audio/bass_synthetic_001-009-075.wav \
+        nsynth-subtrain/audio/bass_synthetic_116-054-050.wav \
+        nsynth-subtrain/audio/bass_synthetic_019-109-025.wav \
+        nsynth-subtrain/audio/flute_acoustic_027-021-100.wav \
+        nsynth-subtrain/audio/flute_acoustic_003-064-127.wav \
+        nsynth-subtrain/audio/flute_synthetic_001-108-127.wav \
+        nsynth-subtrain/audio/guitar_electronic_034-009-050.wav \
+        nsynth-subtrain/audio/guitar_acoustic_031-064-127.wav \
+        nsynth-subtrain/audio/guitar_synthetic_012-120-075.wav
