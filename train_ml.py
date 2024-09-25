@@ -43,5 +43,6 @@ if __name__ == '__main__':
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.xticks(rotation=45, ha='right')
-    plt.title('Confusion Matrix')
-    plt.savefig(os.path.join(RESULT_DIR, 'lgbm_confusion_matrix.png'))
+    plt.tight_layout()
+    plt.title('LightGBM Confusion Matrix')
+    # plt.savefig(os.path.join(RESULT_DIR, 'lgbm_confusion_matrix.png'))

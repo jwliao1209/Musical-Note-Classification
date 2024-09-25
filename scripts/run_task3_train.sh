@@ -28,10 +28,30 @@ fi
 
 # Step 2: Train DL model
 
-# w/o log-scale
-# python train_dl.py --train_data_path dataset/train_not_log_scale.json --valid_data_path dataset/valid_not_log_scale.json --test_data_path dataset/test_not_log_scale.json
+# ShortChunkCNN w/ log-scale
+python train_dl.py \
+    --train_data_path dataset/train.json \
+    --valid_data_path dataset/valid.json \
+    --test_data_path dataset/test.json \
+    --model short_chunk_cnn
 
-# w/ log-scale
-# python train_dl.py --train_data_path dataset/train.json --valid_data_path dataset/valid.json --test_data_path dataset/test.json
+# ShortChunkCNN w/o log-scale
+python train_dl.py \
+    --train_data_path dataset/train_not_log_scale.json \
+    --valid_data_path dataset/valid_not_log_scale.json \
+    --test_data_path dataset/test_not_log_scale.json \
+    --model short_chunk_cnn
 
-python inference.py
+# ShortChunkResCNN w/ log-scale
+python train_dl.py \
+    --train_data_path dataset/train.json \
+    --valid_data_path dataset/valid.json \
+    --test_data_path dataset/test.json \
+    --model short_chunk_res_cnn
+
+# ShortChunkResCNN w/o log-scale
+python train_dl.py \
+    --train_data_path dataset/train_not_log_scale.json \
+    --valid_data_path dataset/valid_not_log_scale.json \
+    --test_data_path dataset/test_not_log_scale.json \
+    --model short_chunk_res_cnn

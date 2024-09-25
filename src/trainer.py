@@ -128,13 +128,13 @@ class Trainer:
         labels = torch.cat([o['label'] for o in outputs])
         result = evaluator(preds, labels)
         record = {f"valid_{k}": round(v, 4) for k, v in result.items()}
-        self.log({'epoch': self.cur_ep} | record)
+        self.log({'epoch': self.cur_ep} | record | {'best_score': self.best_score})
         print(record)
 
         if record['valid_top1_acc'] > self.best_score:
             self.best_score = record['valid_top1_acc']
             self.save()
-            print("Save best model: epoch={self.cur_ep}, score={self.best_score}")
+            print(f'Save best model: epoch={self.cur_ep}, score={self.best_score}')
 
     def log(self, record: Dict[str, float]) -> None:
         if self.logger is not None:

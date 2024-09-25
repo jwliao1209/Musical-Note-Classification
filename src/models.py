@@ -174,6 +174,13 @@ class ShortChunkResCNN(BaseModel):
         return self.dense_blocks(x.view(x.size(0), -1))
 
 
+def get_model(name: str) -> BaseModel:
+    if name == 'short_chunk_cnn':
+        return ShortChunkCNN()
+    elif name == 'short_chunk_res_cnn':
+        return ShortChunkResCNN()
+
+
 if __name__ == '__main__':
     x = torch.randn(4, 1, 128, 128)
     model = ShortChunkCNN(n_channels=128)

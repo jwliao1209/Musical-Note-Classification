@@ -50,5 +50,6 @@ if __name__ == '__main__':
                 "label": data_dict[filename]['instrument_family']
             }
         )
-
+    
+    os.makedirs(os.path.dirname(args.save_path), exist_ok=True)
     save_json(data_list, args.save_path)
