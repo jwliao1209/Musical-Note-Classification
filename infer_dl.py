@@ -2,20 +2,17 @@ import os
 from argparse import ArgumentParser, Namespace
 
 import torch
-import wandb
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
-from torch import nn
 from tqdm import tqdm
 
-from src.constants import PROJECT_NAME, CHECKPOINT_DIR, CKPT_FILE, KNOWN_LABELS, RESULT_DIR
+from src.constants import CKPT_FILE, KNOWN_LABELS, RESULT_DIR
 from src.dataset import AudiosDataset
 from src.evaluate import evaluator
 from src.models import get_model
-from src.trainer import Trainer
 from src.transform import get_transforms
-from src.utils import set_random_seeds, get_time, read_json, save_json, dict_to_device
+from src.utils import set_random_seeds, read_json, dict_to_device
 
 
 def parse_arguments() -> Namespace:
@@ -67,9 +64,6 @@ if __name__ == "__main__":
     
     preds = torch.argmax(preds, dim=1).cpu().numpy()
     labels = labels.cpu().numpy()
-    
-    log_scale = 'w/o log-scale' if 'not_log_scale' in args.test_data_path else 'w/ log-scale'
-    
 
     # Plot the confusion matrix
     cm = confusion_matrix(labels, preds)
@@ -78,6 +72,7 @@ if __name__ == "__main__":
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.xticks(rotation=45, ha='right')
+    log_scale = 'w/o log-scale' if 'not_log_scale' in args.test_data_path else 'w/ log-scale'
     plt.title(f"{''.join([text.title() for text in config['model'].split('_')])} {log_scale} Confusion Matrix")
     plt.tight_layout()
     plt.savefig(os.path.join(RESULT_DIR,
