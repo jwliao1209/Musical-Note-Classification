@@ -20,7 +20,7 @@ class BaseTransform(object):
         pass
 
     def _process(self, single_data, **kwargs):
-        NotImplementedError
+        raise NotImplementedError
 
 
 class LoadMelSpec(BaseTransform):
